@@ -1,7 +1,14 @@
 const express = require('express');
-const { getTalkers, getTalkerById } = require('./utils/fsUtils');
+const { getTalkers, getTalkerById, writeTalker } = require('./utils/fsUtils');
 const { validateEmail, validatePassword } = require('./middlewares/validateLogin');
 const generateToken = require('./utils/generateToken');
+const validateToken = require('./middlewares/validateToken');
+const {
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate } = require('./middlewares/validateFields');
 
 const app = express();
 app.use(express.json());
@@ -16,6 +23,13 @@ app.post('/login', validateEmail, validatePassword, (req, res) => {
   const token = generateToken();
 
   return res.status(200).json({ token });
+});
+
+app.post('/talker', validateToken, validateName, validateAge, validateTalk,
+validateWatchedAt, validateRate, async (req, res) => {
+  const newTalker = await writeTalker(req.body);
+
+  return res.status(201).json(newTalker);
 });
 
 app.get('/talker/:id', async (req, res) => {
