@@ -1,5 +1,6 @@
 const express = require('express');
-const { getTalkers, getTalkerById, writeTalker, updateTalker } = require('./utils/fsUtils');
+const { getTalkers, getTalkerById, writeTalker,
+  updateTalker, deleteTalker } = require('./utils/fsUtils');
 const { validateEmail, validatePassword } = require('./middlewares/validateLogin');
 const generateToken = require('./utils/generateToken');
 const validateToken = require('./middlewares/validateToken');
@@ -53,6 +54,14 @@ validateWatchedAt, validateRate, async (req, res) => {
   }
 
   return res.status(200).json(updatedTalker);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  await deleteTalker(Number(id));
+
+  return res.status(204).end();
 });
 
 module.exports = app;
