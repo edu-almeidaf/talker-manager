@@ -70,11 +70,18 @@ const deleteTalker = async (id) => {
   await fs.writeFile(resolve(__dirname, path), newTalkers);
 };
 
-const searchTalkerByQuery = async (query) => {
+const searchTalkerByQuery = async (q, rate) => {
   const talkers = await readTalkers();
-  if (!query) return talkers;
+  let filteredTalkers = talkers;
+  if (q) {
+    filteredTalkers = filteredTalkers.filter(({ name }) => (
+      name.toLowerCase().includes(q.toLowerCase())));
+  }
 
-  const filteredTalkers = talkers.filter(({ name }) => name.includes(query));
+  if (rate) {
+    filteredTalkers = filteredTalkers.filter(({ talk }) => (
+      talk.rate === rate));
+  }
 
   return filteredTalkers;
 };

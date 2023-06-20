@@ -9,6 +9,7 @@ const validateAge = require('./middlewares/validateAge');
 const validateTalk = require('./middlewares/validateTalk');
 const validateWatchedAt = require('./middlewares/validateWatchedAt');
 const validateRate = require('./middlewares/validateRate');
+const validateRateQuery = require('./middlewares/validateRateQuery');
 
 const app = express();
 app.use(express.json());
@@ -32,10 +33,10 @@ validateWatchedAt, validateRate, async (req, res) => {
   return res.status(201).json(newTalker);
 });
 
-app.get('/talker/search', validateToken, async (req, res) => {
-  const { q } = req.query;
+app.get('/talker/search', validateToken, validateRateQuery, async (req, res) => {
+  const { q, rate } = req.query;
 
-  const filteredTalkers = await searchTalkerByQuery(q);
+  const filteredTalkers = await searchTalkerByQuery(q, Number(rate));
 
   return res.status(200).json(filteredTalkers);
 });
