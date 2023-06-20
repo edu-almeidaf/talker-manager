@@ -70,10 +70,20 @@ const deleteTalker = async (id) => {
   await fs.writeFile(resolve(__dirname, path), newTalkers);
 };
 
+const searchTalkerByQuery = async (query) => {
+  const talkers = await readTalkers();
+  if (!query) return talkers;
+
+  const filteredTalkers = talkers.filter(({ name }) => name.includes(query));
+
+  return filteredTalkers;
+};
+
 module.exports = {
   getTalkers,
   getTalkerById,
   writeTalker,
   updateTalker,
   deleteTalker,
+  searchTalkerByQuery,
 };

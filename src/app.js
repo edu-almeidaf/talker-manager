@@ -1,6 +1,6 @@
 const express = require('express');
 const { getTalkers, getTalkerById, writeTalker,
-  updateTalker, deleteTalker } = require('./utils/fsUtils');
+  updateTalker, deleteTalker, searchTalkerByQuery } = require('./utils/fsUtils');
 const { validateEmail, validatePassword } = require('./middlewares/validateLogin');
 const generateToken = require('./utils/generateToken');
 const validateToken = require('./middlewares/validateToken');
@@ -30,6 +30,14 @@ validateWatchedAt, validateRate, async (req, res) => {
   const newTalker = await writeTalker(req.body);
 
   return res.status(201).json(newTalker);
+});
+
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+
+  const filteredTalkers = await searchTalkerByQuery(q);
+
+  return res.status(200).json(filteredTalkers);
 });
 
 app.get('/talker/:id', async (req, res) => {
