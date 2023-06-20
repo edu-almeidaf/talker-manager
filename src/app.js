@@ -3,12 +3,11 @@ const { getTalkers, getTalkerById, writeTalker } = require('./utils/fsUtils');
 const { validateEmail, validatePassword } = require('./middlewares/validateLogin');
 const generateToken = require('./utils/generateToken');
 const validateToken = require('./middlewares/validateToken');
-const {
-  validateName,
-  validateAge,
-  validateTalk,
-  validateWatchedAt,
-  validateRate } = require('./middlewares/validateFields');
+const validateName = require('./middlewares/validateName');
+const validateAge = require('./middlewares/validateAge');
+const validateTalk = require('./middlewares/validateTalk');
+const validateWatchedAt = require('./middlewares/validateWatchedAt');
+const validateRate = require('./middlewares/validateRate');
 
 const app = express();
 app.use(express.json());
