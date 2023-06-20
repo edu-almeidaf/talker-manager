@@ -42,8 +42,28 @@ const getTalkerById = async (id) => {
   return talkers.find((talker) => talker.id === id);
 };
 
+const updateTalker = async (id, talkerData) => {
+  const oldTalkers = await readTalkers();
+  const updatedTalker = { id, ...talkerData };
+
+  const index = oldTalkers.findIndex((talker) => talker.id === id);
+  if (index === -1) return null;
+
+  const updatedTalkers = oldTalkers.reduce((talkers, currentTalker) => {
+    if (currentTalker.id === updatedTalker.id) {
+      return [...talkers, updatedTalker];
+    }
+    return [...talkers, currentTalker];
+  }, []);
+
+  const newTalkers = JSON.stringify(updatedTalkers, null, 2);
+  await fs.writeFile(resolve(__dirname, path), newTalkers);
+  return updatedTalker;
+};
+
 module.exports = {
   getTalkers,
   getTalkerById,
   writeTalker,
+  updateTalker,
 };
