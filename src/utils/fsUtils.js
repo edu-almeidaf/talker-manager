@@ -91,6 +91,26 @@ const searchTalkerByQuery = async (q, rate, date) => {
   return filteredTalkers;
 };
 
+const updateRate = async (id, rate) => {
+  const oldTalkers = await readTalkers();
+  
+  const findTalker = oldTalkers.find((talker) => talker.id === id);
+  if (!findTalker) return null;
+
+  const updatedTalker = { ...findTalker, talk: { ...findTalker.talk, rate } };
+  
+  const updatedTalkers = oldTalkers.map((talker) => {
+    if (talker.id === updatedTalker.id) {
+      return updatedTalker;
+    }
+    return talker;
+  });
+
+  const newTalkers = JSON.stringify(updatedTalkers, null, 2);
+
+  await fs.writeFile(resolve(__dirname, path), newTalkers);
+};
+
 module.exports = {
   getTalkers,
   getTalkerById,
@@ -98,4 +118,5 @@ module.exports = {
   updateTalker,
   deleteTalker,
   searchTalkerByQuery,
+  updateRate,
 };

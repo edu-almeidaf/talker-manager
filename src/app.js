@@ -1,6 +1,6 @@
 const express = require('express');
-const { getTalkers, getTalkerById, writeTalker,
-  updateTalker, deleteTalker, searchTalkerByQuery } = require('./utils/fsUtils');
+const { getTalkers, getTalkerById, writeTalker, updateTalker, deleteTalker,
+  searchTalkerByQuery, updateRate } = require('./utils/fsUtils');
 const { validateEmail, validatePassword } = require('./middlewares/validateLogin');
 const generateToken = require('./utils/generateToken');
 const validateToken = require('./middlewares/validateToken');
@@ -11,6 +11,7 @@ const validateWatchedAt = require('./middlewares/validateWatchedAt');
 const validateRate = require('./middlewares/validateRate');
 const validateRateQuery = require('./middlewares/validateRateQuery');
 const validateDateQuery = require('./middlewares/validateDateQuery');
+const validateRatePatch = require('./middlewares/validateRatePatch');
 
 const app = express();
 app.use(express.json());
@@ -65,6 +66,17 @@ validateWatchedAt, validateRate, async (req, res) => {
   }
 
   return res.status(200).json(updatedTalker);
+});
+
+app.patch('/talker/rate/:id', validateToken, validateRatePatch, async (req, res) => {
+  const { id } = req.params;
+  const { rate } = req.body;
+
+  const verifyId = await updateRate(Number(id), rate);
+  if (verifyId === null) {
+    return res.status(404).json({ message: 'ID não encontrado' });
+  }
+  return res.status(204).end();
 });
 
 app.delete('/talker/:id', validateToken, async (req, res) => {
