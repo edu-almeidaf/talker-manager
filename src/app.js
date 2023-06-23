@@ -12,12 +12,18 @@ const validateRate = require('./middlewares/validateRate');
 const validateRateQuery = require('./middlewares/validateRateQuery');
 const validateDateQuery = require('./middlewares/validateDateQuery');
 const validateRatePatch = require('./middlewares/validateRatePatch');
+const findAll = require('./db/talkers.model');
 
 const app = express();
 app.use(express.json());
 
 app.get('/talker', async (req, res) => {
   const talkers = await getTalkers();
+  return res.status(200).json(talkers);
+});
+
+app.get('/talker/db', async (_req, res) => {
+  const talkers = await findAll();
   return res.status(200).json(talkers);
 });
 
